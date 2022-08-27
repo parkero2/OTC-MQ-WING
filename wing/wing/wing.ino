@@ -41,7 +41,9 @@ const int Fdr5Bump = 7;
 const int pgUp = 47;
 const int pgDn = 46;
 
-const int MCUI2C = 0x0E;
+const int MEGA = 0x0E;
+const int MCUI2C = 2B8;
+const int BaseI2C = 1B39;
 
 //Create a temp array for the fader values
 int FaderTemps[10];
@@ -68,9 +70,12 @@ void WifiTansmit() {
 }
 
 void setup() {
-    Wire.begin();
+    Wire.begin(MEGA);
     Wire.onReceive(RecData);
     while (nanoWait);
+    for (int i = 0; i < FaderTemps.length - 5; i++) {
+        FaderTemps[i] = analogRead(faders[i]);
+    }
 }
 
 void loop() {

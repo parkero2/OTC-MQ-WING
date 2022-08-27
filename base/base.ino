@@ -1,9 +1,9 @@
 #include <Wire.h>
 
-const int wingAddr = 69;
+const int baseI2C = 1B39;
 
 void setup() {
-    Wire.begin();
+    Wire.begin(baseI2C);
     Serial.begin(9600);
 }
 
