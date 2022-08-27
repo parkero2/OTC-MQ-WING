@@ -43,12 +43,34 @@ const int pgDn = 46;
 
 const int MCUI2C = 0x0E;
 
+//Create a temp array for the fader values
+int FaderTemps[10];
+const string FaderNames[10] = {"F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10"};
+
+//Bool to wait for nano
+bool nanoWait = true;
+
+//Create a function for recieving data on I2C
+void RecData() {
+    string data = "";
+    while (Wire.available()) {
+        data = Wire.read();
+        for (int i = 4; i < FaderTemps.length; i++) {
+            if (data.startsWith(faderNames[i])) {
+                FaderTemps[i] = analogRead(faders[i]);
+            }
+        }
+    }
+}
+
 void WifiTansmit() {
 
 }
 
 void setup() {
-
+    Wire.begin();
+    Wire.onReceive(RecData);
+    while (nanoWait);
 }
 
 void loop() {
