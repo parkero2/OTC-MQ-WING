@@ -1,12 +1,14 @@
 #include <Wire.h>
 
+//CHANGE ANALOG TO #DEFINE
+
 //Declare fader inputs
-const int GM = A6;
-const int fader1 = A15;
-const int fader2 = A14;
-const int fader3 = A13;
-const int fader4 = A12;
-const int fader5 = A11;
+#define GM A6;
+#define fader1 A15;
+#define fader2 A14;
+#define fader3 A13;
+#define fader4 A12;
+#define fader5 A11;
 
 //Declare fader controls
 const int Fdr1Play = 19;
@@ -26,14 +28,14 @@ const int Fdr5Pause = 8;
 const int Fdr5Bump = 7;
 
 //Declare encoders
-const int encA = A2;
-const int encB = A3;
-const int encC = A4;
-const int encD = A5;
-const int encE = A7;
-const int encF = A8;
-const int encX = A9;
-const int encY = A10;
+#define encA A2;
+#define encB A3;
+#define encC A4;
+#define encD A5;
+#define encE A7;
+#define encF A8;
+#define encX A9;
+#define encY A10;
 
 //Page controls
 const int pgUp = 47;
