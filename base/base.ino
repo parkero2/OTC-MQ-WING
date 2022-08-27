@@ -1,4 +1,5 @@
 #include <Wire.h>
+#include "Wifi.h"
 
 const int baseI2C = 1B39;
 

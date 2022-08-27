@@ -1,7 +1,5 @@
 #include <Wire.h>
 
-//CHANGE ANALOG TO #DEFINE
-
 //Declare fader inputs
 #define GM A6
 #define fader1 A15
@@ -71,7 +69,7 @@ const int sel = 25;
 const int clr = 27;
 const int shift = 26;
 const int blind = 24;
-const int left = 22;
+const int back = 22;
 
 //Cue controls
 const int undo = 35;
@@ -88,29 +86,37 @@ const int MEGA = 0x0E;
 const int MCUI2C = 0x2B8;
 const int BaseI2C = 0x1B39;
 
-//Create a temp array for the fader values
+//Create a temp array for the values
 int FaderTemps[10];
 const int faders[5] = {fader1, fader2, fader3, fader4, fader5};
 const String FaderNames[10] = {"F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10"};
+const int FaderPinMap[30] = {Fdr1Play, Fdr1Pause, Fdr1Bump, Fdr2Play, Fdr2Pause, Fdr2Bump, Fdr3Play, Fdr3Pause, Fdr3Bump, Fdr4Play, Fdr4Pause, Fdr4Bump, Fdr5Play, Fdr5Pause, Fdr5Bump, Fdr6Play, Fdr6Pause, Fdr6Bump, Fdr7Play, Fdr7Pause, Fdr7Bump, Fdr8Play, Fdr8Pause, Fdr8Bump, Fdr9Play, Fdr9Pause, Fdr9Bump, Fdr10Play, Fdr10Pause, Fdr10Bump};
+const String FaderControls[30] = {"F01Pl", "F01Pa", "F01Bu", "F02Pl", "F02Pa", "F02Bu", "F03Pl", "F03Pa", "F03Bu", "F04Pl", "F04Pa", "F04Bu", "F05Pl", "F05Pa", "F05Bu", "F06Pl", "F06Pa", "F06Bu", "F07Pl", "F07Pa", "F07Bu", "F08Pl", "F08Pa", "F08Bu", "F09Pl", "F09Pa", "F09Bu", "F10Pl", "F10Pa", "F10Bu"};
 
 //Bool to wait for nano
 bool nanoWait = true;
 
 //Create a function for recieving data on I2C
 void RecData() {
-    String data = "";
+    char data[10];
     while (Wire.available()) {
         data = Wire.read();
         for (int i = 4; i < 10; i++) {
-            if (data.startsWith(FaderNames[i])) {
+            if (String(data).startsWith(FaderNames[i])) {
                 FaderTemps[i] = analogRead(faders[i]);
+                TansmitUpdate(FaderNames[i] + FaderTemps[i]);
             }
         }
     }
 }
 
-void WifiTansmit() {
-
+void TansmitUpdate(char *dataToTran) {
+    Wire.beginTransmission(MCUI2C);
+    Wire.write(String(dataToTran));
+    Wire.endTransmission();
+    Wire.beginTransmission(BaseI2C);
+    wire.write(String(dataToTran));
+    Wire.endTransmission();
 }
 
 void setup() {
@@ -123,5 +129,9 @@ void setup() {
 }
 
 void loop() {
-    
+    for (int i = 0; i < 30; i++){ //Check for dumps, pauses and plays
+        if (digitalRead(FaderPinMap[i]) == HIGH) {
+            TansmitUpdate(FaderControls[i]);
+        }
+    }
 }
