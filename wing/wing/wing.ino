@@ -3,12 +3,12 @@
 //CHANGE ANALOG TO #DEFINE
 
 //Declare fader inputs
-#define GM A6;
-#define fader1 A15;
-#define fader2 A14;
-#define fader3 A13;
-#define fader4 A12;
-#define fader5 A11;
+#define GM A6
+#define fader1 A15
+#define fader2 A14
+#define fader3 A13
+#define fader4 A12
+#define fader5 A11
 
 //Declare fader controls
 const int Fdr1Play = 19;
@@ -19,13 +19,29 @@ const int Fdr2Pause = 17;
 const int Fdr2Bump = 16;
 const int Fdr3Play = 15;
 const int Fdr3Pause = 14;
-const int Fdr3Bump = 13;
-const int Fdr4Play = 12;
-const int Fdr4Pause = 11;
-const int Fdr4Bump = 10;
-const int Fdr5Play = 9;
-const int Fdr5Pause = 8;
-const int Fdr5Bump = 7;
+const int Fdr3Bump = 0;
+const int Fdr4Play = 1;
+const int Fdr4Pause = 2;
+const int Fdr4Bump = 3;
+const int Fdr5Play = 4;
+const int Fdr5Pause = 5;
+const int Fdr5Bump = 6;
+
+const int Fdr6Play = 9;
+const int Fdr6Pause = 8;
+const int Fdr6Bump = 7;
+const int Fdr7Play = 12;
+const int Fdr7Pause = 11;
+const int Fdr7Bump = 10;
+const int Fdr8Play = 44;
+const int Fdr8Pause = 45;
+const int Fdr8Bump = 42;
+const int Fdr9Play = 43;
+const int Fdr9Pause = 40;
+const int Fdr9Bump = 41;
+const int Fdr10Play = 38;
+const int Fdr10Pause = 39;
+const int Fdr10Bump = 36;
 
 //Declare encoders
 #define encA A2;
@@ -41,24 +57,52 @@ const int Fdr5Bump = 7;
 const int pgUp = 47;
 const int pgDn = 46;
 
+//Select controls
+const int loc = 53;
+const int oddeven = 52;
+const int highlight = 50;
+const int single = 51;
+const int fan = 48;
+const int all = 49;
+
+//Programmer controls
+const int rel = 23;
+const int sel = 25;
+const int clr = 27;
+const int shift = 26;
+const int blind = 24;
+const int left = 22;
+
+//Cue controls
+const int undo = 35;
+const int rem = 33;
+const int move = 31;
+const int copy = 29;
+const int set = 28;
+const int inc = 30;
+const int upd = 32;
+const int rec = 34;
+
+//I2C address
 const int MEGA = 0x0E;
-const int MCUI2C = 2B8;
-const int BaseI2C = 1B39;
+const int MCUI2C = 0x2B8;
+const int BaseI2C = 0x1B39;
 
 //Create a temp array for the fader values
 int FaderTemps[10];
-const string FaderNames[10] = {"F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10"};
+const int faders[5] = {fader1, fader2, fader3, fader4, fader5};
+const String FaderNames[10] = {"F01", "F02", "F03", "F04", "F05", "F06", "F07", "F08", "F09", "F10"};
 
 //Bool to wait for nano
 bool nanoWait = true;
 
 //Create a function for recieving data on I2C
 void RecData() {
-    string data = "";
+    String data = "";
     while (Wire.available()) {
         data = Wire.read();
-        for (int i = 4; i < FaderTemps.length; i++) {
-            if (data.startsWith(faderNames[i])) {
+        for (int i = 4; i < 10; i++) {
+            if (data.startsWith(FaderNames[i])) {
                 FaderTemps[i] = analogRead(faders[i]);
             }
         }
@@ -73,7 +117,7 @@ void setup() {
     Wire.begin(MEGA);
     Wire.onReceive(RecData);
     while (nanoWait);
-    for (int i = 0; i < FaderTemps.length - 5; i++) {
+    for (int i = 0; i < 5; i++) {
         FaderTemps[i] = analogRead(faders[i]);
     }
 }
