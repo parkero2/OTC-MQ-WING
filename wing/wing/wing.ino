@@ -1,5 +1,13 @@
 #include <Wire.h>
 
+/**
+ * REFERENCE:
+ * FD01100 - FADER 1 100%
+ * F01Pl - FADER 1 PLAY
+ * F01Pu - FADER 1 PAUSE
+ * F01Bu - FADER 1 BUMP
+*/
+
 //Declare fader inputs
 #define GM A6
 #define fader1 A15
@@ -98,9 +106,9 @@ bool nanoWait = true;
 
 //Create a function for recieving data on I2C
 void RecData() {
-    char data[10];
+    char *data[10];
     while (Wire.available()) {
-        data = Wire.read();
+        data = (char*)Wire.read();
         for (int i = 4; i < 10; i++) {
             if (String(data).startsWith(FaderNames[i])) {
                 FaderTemps[i] = analogRead(faders[i]);
